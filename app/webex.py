@@ -1,10 +1,12 @@
+import os
+
 from typing import Optional
 
 from pydantic import BaseModel
 from webexteamssdk import WebexTeamsAPI
 
-_api_key: str = ""
-_api = WebexTeamsAPI(access_token=_api_key or "test_api_key")
+_api_key: str = os.environ.get("WEBEX_API_TOKEN", "test_api_key")
+_api = WebexTeamsAPI(access_token=_api_key)
 
 
 class WebexMsg(BaseModel):
