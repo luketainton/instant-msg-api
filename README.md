@@ -1,4 +1,4 @@
-# template
+# instant-msg-api
 
 ## Description
 
