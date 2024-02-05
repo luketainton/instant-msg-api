@@ -42,3 +42,8 @@ updates:
       include: "scope"
     labels:
       - "dependencies"
+    groups:
+      pydantic:
+        patterns:
+          - "pydantic-*"
+          - "pydantic*"
