@@ -47,3 +47,8 @@ updates:
         patterns:
           - "pydantic-*"
           - "pydantic*"
+      fastapi:
+        patterns:
+          - "starlette"
+          - "fastapi"
+
