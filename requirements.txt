@@ -5,7 +5,7 @@ fastapi==0.110.2
 future==1.0.0
 h11==0.14.0
 idna==3.7
-pydantic-core==2.18.1
+pydantic-core==2.18.2
 pydantic==2.7.0
 PyJWT==2.8.0
 python-dotenv==1.0.1
