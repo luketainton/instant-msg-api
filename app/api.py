@@ -1,3 +1,5 @@
+"""FastAPI app for sending messages via multiple channels."""
+
 from fastapi import FastAPI, HTTPException, Security
 from fastapi.security import APIKeyHeader
 
@@ -13,6 +15,14 @@ webapp = FastAPI()
 api_key_header = APIKeyHeader(name="X-API-Key")
 
 def get_api_key(api_key_header: str = Security(api_key_header)) -> str:
+    """Validate API Key.
+    
+    Args:
+        api_key_header (str): API Key header.
+    
+    Returns:
+        str: API Key header.
+    """
     if api_key_header in API_KEYS:
         return api_key_header
     raise HTTPException(
@@ -22,10 +32,23 @@ def get_api_key(api_key_header: str = Security(api_key_header)) -> str:
 
 @webapp.get("/")
 async def root():
+    """Root endpoint.
+    
+    Returns:
+        dict: {"detail": "App is alive."}
+    """
     return {"detail": "App is alive."}
 
 @webapp.post("/webex")
 async def message_via_webex(msg: WebexMsg, api_key: str = Security(get_api_key)):
+    """Send message via Webex Teams.
+    
+    Args:
+        msg (WebexMsg): Message to send.
+        api_key (str): API Key.
+    
+    Returns:
+        dict: Webex Teams message response."""
     if msg.toPersonEmail and msg.toRoomId:
         raise HTTPException(
             status_code=422,
