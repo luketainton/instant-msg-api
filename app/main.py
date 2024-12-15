@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+"""Main module."""
 
 from dotenv import load_dotenv
 
@@ -9,4 +9,3 @@ if __name__ == "__main__":
     import uvicorn
     load_dotenv()
     uvicorn.run(webapp, host="0.0.0.0", port=8000)
-

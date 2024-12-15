@@ -1,3 +1,5 @@
+"""Webex Teams API."""
+
 import os
 
 from typing import Optional
@@ -10,6 +12,7 @@ _api = WebexTeamsAPI(access_token=_api_key)
 
 
 class WebexMsg(BaseModel):
+    """Webex Teams message model."""
     toPersonEmail: Optional[str]
     toRoomId: Optional[str]
     text: Optional[str]
@@ -17,6 +20,14 @@ class WebexMsg(BaseModel):
 
 
 def send_msg(msg: WebexMsg) -> dict:
+    """Send message via Webex Teams.
+    
+    Args:
+        msg (WebexMsg): Message to send.
+    
+    Returns:
+        dict: Webex Teams message response.
+    """
     result = _api.messages.create(
         roomId=msg.toRoomId,
         toPersonEmail=msg.toPersonEmail,
