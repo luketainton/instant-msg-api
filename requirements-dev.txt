@@ -5,7 +5,7 @@ pylint-exit
 pytest
 
 # httpx
-certifi==2024.8.30
+certifi==2024.12.14
 httpcore==1.0.7
 httpx==0.28.1
 zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
