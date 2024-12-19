@@ -11,6 +11,7 @@ python-dotenv = "^1.0.1"
 fastapi = "^0.115.6"
 pydantic = "^2.10.4"
 webexteamssdk = "^1.7"
+httpx = "^0.28.1"
 
 
 [tool.poetry.group.dev.dependencies]
