@@ -10,7 +10,7 @@ package-mode = false
 python = "^3.11"
 python-dotenv = "^1.0.1"
 fastapi = "^0.115.7"
-pydantic = "^2.10.5"
+pydantic = "^2.10.6"
 webexteamssdk = "^1.7"
 httpx = "^0.28.1"
 
