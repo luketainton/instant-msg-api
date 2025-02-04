@@ -14,7 +14,7 @@ jobs:
       commit_message: ${{ gitea.event.pull_request.title }}
 
   ci:
-    uses: https://git.tainton.uk/actions/gha-workflows/.gitea/workflows/ci-python-poetry.yml@main
+    uses: https://git.tainton.uk/actions/gha-workflows/.gitea/workflows/ci-python-uv-with-docker.yml@main
     with:
       python-version: 3.13
     secrets:
