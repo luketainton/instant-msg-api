@@ -1,0 +1,17 @@
+name: "Enforce Conventional Commit"
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  validate:
+    name: Validate PR Title
+    runs-on: ubuntu-latest
+    steps:
+      - uses: http://${{ vars.PACKAGES_REGISTRY_URL }}/actions/conventional-commits-check-action@v1.2.3
+        with:
+          commit-message: ${{ gitea.event.pull_request.title }}
