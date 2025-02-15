@@ -10,11 +10,11 @@ authors = [
 requires-python = "<4.0,>=3.11"
 dependencies = [
     "python-dotenv<2.0.0,>=1.0.1",
-    "fastapi<1.0.0,>=0.115.7",
+    "fastapi<1.0.0,>=0.115.8",
     "pydantic<3.0.0,>=2.10.6",
-    "webexteamssdk<2.0,>=1.7",
     "httpx<1.0.0,>=0.28.1",
     "uvicorn>=0.34.0",
+    "webexpythonsdk>=2.0.4",
 ]
 
 [tool.pdm.build]
