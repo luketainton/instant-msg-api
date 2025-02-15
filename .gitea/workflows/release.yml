@@ -2,7 +2,7 @@ name: Release
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 9 * * 0"
+    - cron: '0 9 * * 0'
 
 jobs:
   test:
@@ -14,12 +14,82 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+  get_next_release:
+    name: Get Next Release
+    runs-on: ubuntu-latest
+    needs: test
+    outputs:
+      release_name: ${{ steps.get_next_version.outputs.tag }}
+      changelog: ${{ steps.get_next_version.outputs.changelog }}
+      clean_changelog: ${{ steps.get_next_version.outputs.clean_changelog }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Changes since last tag
+        id: changes
+        run: |
+          rm -f .changes
+          git log $(git describe --tags --abbrev=0)..HEAD --no-merges --oneline >> .changes
+          cat .changes
+
+      - name: Check for changes
+        run: |
+          if [[ -z $(grep '[^[:space:]]' .changes) ]] ; then
+            echo "changes=false"
+            echo "changes=false" >> "$GITEA_OUTPUT"
+          else
+            echo "changes=true"
+            echo "changes=true" >> "$GITEA_OUTPUT"
+          fi
+
+      - name: Cancel if no changes
+        if: steps.changes.outputs.changes == 'false'
+        run: exit 1
+
+      - name: Set server URL
+        id: set_srvurl
+        run: |
+          SRVURL=$(echo "${{ gitea.server_url }}" | sed 's/https:\/\/\(.*\)/\1/')
+          echo "srvurl=$SRVURL" >> "$GITEA_OUTPUT"
+
+      - name: Get next version
+        uses: TriPSs/conventional-changelog-action@v6
+        id: get_next_version
+        with:
+          git-url: ${{ steps.set_srvurl.outputs.srvurl }}
+          github-token: ${{ gitea.token }}
+          preset: 'conventionalcommits'
+          # preset: "angular"  # This is the default
+          skip-commit: true
+          release-count: 1
+          output-file: false
+          create-summary: true
+          skip-on-empty: true
+          skip-version-file: true
+          skip-tag: true
+
   create_release:
     name: Create Release
-    needs: test
-    uses: https://git.tainton.uk/actions/gha-workflows/.gitea/workflows/create-release.yml@main
-    secrets:
-      ACTIONS_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+    runs-on: ubuntu-latest
+    needs: get_next_release
+    outputs:
+      release_name: ${{ steps.create_release_job.outputs.tag }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Create release
+        uses: https://git.tainton.uk/actions/create-release-action@v1.1.0
+        id: create_release_job
+        with:
+          release_name: ${{ needs.get_next_release.outputs.release_name }}
+          tag: ${{ needs.get_next_release.outputs.release_name }}
+          body: ${{ needs.get_next_release.outputs.clean_changelog }}
 
   print_release:
     name: Print Release
